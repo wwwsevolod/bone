@@ -1,0 +1,31 @@
+{
+  "name": "enterprise-flux",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enterprise-react/enterprise-flux.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/enterprise-react/enterprise-flux/issues"
+  },
+  "homepage": "https://github.com/enterprise-react/enterprise-flux#readme",
+  "dependencies": {
+    "babel-core": "^5.8.22",
+    "babel-loader": "^5.3.2",
+    "babel-runtime": "^5.8.20",
+    "immutable": "^3.7.4"
+  },
+  "devDependencies": {
+    "awesome-typescript-loader": "^0.11.3",
+    "jasmine": "^2.3.2",
+    "typescript": "^1.6.0-dev.20150810",
+    "webpack": "^1.11.0"
+  }
+}

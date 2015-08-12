@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "jsx": "preserve",
+        "noEmit": true,
+        "rootDir": "src",
+        "target": "es6",
+        "experimentalDecorators": true
+    },
+    "filesGlob": [
+        "./node_modules/typescript/lib/lib.es6.d.ts",
+        "./typings/**/*.d.ts",
+        "./src/**/*.tsx",
+        "./src/**/*.ts"
+    ],
+    "ide": {
+        "compileOnSave": false
+    },
+    "compileOnSave": false,
+    "awesomeTypescriptLoaderOptions": {
+        "compiler": "typescript"
+    }
+}
