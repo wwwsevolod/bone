@@ -26,7 +26,7 @@ For example it doesn't run on windows, have problems with support of ES6 feature
 
 #### Typescript has good goals
 
-And best of goals is: __not create new language, just help javascript programmers to write type safe programms with basic JS usage patterns.__
+And best of goals is: __not create new language, just help javascript programers to write type safe programs with common JS usage patterns.__
 Quite similiar to flow, but without weird ocaml thing :)
 
 #### Typescript is quite good
