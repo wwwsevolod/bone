@@ -1,26 +1,25 @@
 {
-  "name": "enterprise-flux",
-  "version": "1.0.0",
-  "description": "",
+  "name": "bone",
+  "version": "0.1.0",
+  "description": "Typescript flux implementation without flux",
   "main": "index.js",
+  "keywords": ["typescript", "flux", "redux", "bone"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/enterprise-react/enterprise-flux.git"
+    "url": "git+https://github.com/wwwsevolod/bone.git"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/enterprise-react/enterprise-flux/issues"
+    "url": "https://github.com/wwwsevolod/bone/issues"
   },
-  "homepage": "https://github.com/enterprise-react/enterprise-flux#readme",
+  "homepage": "https://github.com/wwwsevolod/bone#readme",
   "dependencies": {
     "babel-core": "^5.8.22",
     "babel-loader": "^5.3.2",
-    "babel-runtime": "^5.8.20",
-    "immutable": "^3.7.4"
+    "babel-runtime": "^5.8.20"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^0.11.3",

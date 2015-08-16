@@ -10,7 +10,9 @@
         "./node_modules/typescript/lib/lib.es6.d.ts",
         "./typings/**/*.d.ts",
         "./src/**/*.tsx",
-        "./src/**/*.ts"
+        "./src/**/*.ts",
+        "./examples/**/*.ts",
+        "./examples/**/*.tsx"
     ],
     "ide": {
         "compileOnSave": false
