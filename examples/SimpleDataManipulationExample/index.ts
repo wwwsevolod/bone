@@ -8,7 +8,6 @@ const AddTodo = createAction('AddTodo', (text: string) => text);
 const ResolveTodo = createAction('ResolveTodo', (todo: Todo) => todo.id);
 
 
-
 // Create Reducer
 let counter = 0;
 
@@ -23,16 +22,16 @@ class Todo {
     }
 }
 
-const TodoList = createReducer(() => return <Todo[]> []);
+const TodoList = createReducer(() => <Todo[]> []);
 
 TodoList.on(AddTodo, (state, action) => {
     return state.concat(new Todo(action.payload));
 });
 
+
 TodoList.on(ResolveTodo, (state, action) => {
     return state.slice().splice(state.findIndex((value) => value.id === action.payload), 1);
 });
-
 
 // Create Data Context
 
