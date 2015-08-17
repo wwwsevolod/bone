@@ -53,7 +53,7 @@ const TestContext = createContext({
     }
 });
 
-const context = TestContext();
+const context = new TestContext();
 
 // You will see {todos: []}
 console.log(context.getState());

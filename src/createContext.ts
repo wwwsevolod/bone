@@ -81,20 +81,19 @@ abstract class ContextClass<Actions, ReducerState, Parent> {
 }
 
 export function createContext<Actions, ReducerState>(options: IContextOptions<Actions, ReducerState>) {
-    return <Parent>(parent?: Parent) => {
-        class GeneratedContext extends ContextClass<Actions, ReducerState, Parent> {
-            protected reduceState(state: ReducerState, action: IAction<any>): ReducerState {
-                return options.reduceState(state, action);
-            }
+    return class GeneratedContext<Parent> extends ContextClass<Actions, ReducerState, Parent> {
+        constructor(parent?: Parent) {
+            super();
+
+            this.setActions(options.actions);
+            this.setParent(parent);
+
+            InitAction.setDispatcher(this.getDispatchFunction())();
         }
 
-        const context = new GeneratedContext();
-        context.setActions(options.actions);
-        context.setParent(parent);
-
-        InitAction.setDispatcher(context.getDispatchFunction())();
-
-        return context;
-    };
+        protected reduceState(state: ReducerState, action: IAction<any>): ReducerState {
+            return options.reduceState(state, action);
+        }
+    }
 }
 
