@@ -66,7 +66,7 @@ abstract class ContextClass<Actions, ReducerState, Parent> {
     }
 
     serialize() {
-        return this.state;
+        return JSON.stringify(this);
     }
 
     hydrate(state: ReducerState) {
@@ -75,7 +75,7 @@ abstract class ContextClass<Actions, ReducerState, Parent> {
     }
 
     toJSON() {
-        return this.serialize();
+        return this.getState();
     }
 
 }

@@ -1,19 +1,12 @@
-import {IActionCreator} from './createAction';
 import {IDispatcherFunction, IAsyncAction} from './Interfaces';
-
-export interface IAsyncActionCreator<FunctionType> extends IActionCreator<FunctionType> {
-
-}
-
-export type TAsyncActionFunction<ActionFunction> = ActionFunction & IAsyncActionCreator<ActionFunction>;
+import {createActionCreator} from './createActionCreator';
 
 export const STATUS_BEGIN = 'begin';
 export const STATUS_FAILURE = 'failure';
 export const STATUS_SUCCESS = 'success';
 
-export function createAsyncAction<ActionFunction extends { (...args: any[]): Promise<any> }>(actionType: string, actionCreator: ActionFunction) {
-    const actionName = actionType;
-    const converted = <TAsyncActionFunction<ActionFunction>> function(...args) {
+export function createAsyncAction<ActionFunction extends { (...args: any[]): Promise<any> }>(actionName: string, actionCreator: ActionFunction) {
+    return createActionCreator(actionName, <ActionFunction> function(...args) {
         let promise: Promise<any>;
 
         this.dispatcher(<IAsyncAction<{ arguments: any[] }>> {
@@ -44,8 +37,8 @@ export function createAsyncAction<ActionFunction extends { (...args: any[]): Pro
             });
 
             throw error;
-        }).then<any>((result: any) => {
-            this.dispatcher(<IAsyncAction<any>> {
+        }).then<any>(<Result> (result: Result) => {
+            this.dispatcher(<IAsyncAction<Result>> {
                 type: actionName,
                 status: STATUS_SUCCESS,
                 payload: result
@@ -53,16 +46,5 @@ export function createAsyncAction<ActionFunction extends { (...args: any[]): Pro
 
             return result;
         });
-    };
-
-    converted.is = (action) => action.type === converted.type;
-    converted.type = actionName;
-
-    converted.setDispatcher = (dispatcher: IDispatcherFunction) => {
-        return converted.bind({
-            dispatcher: dispatcher
-        });
-    };
-
-    return converted;
+    });
 }

@@ -1,4 +1,5 @@
-import {InitAction, IActionCreator, TActionFunction} from './createAction';
+import {InitAction} from './createAction';
+import {IActionCreator, TActionCreatorFunction} from './createActionCreator';
 import {IAction, IAsyncAction} from './Interfaces';
 import {STATUS_BEGIN, STATUS_FAILURE, STATUS_SUCCESS} from './createAsyncAction';
 
@@ -8,8 +9,8 @@ export interface IFunctionThatReturn<ReturnType, ArgType> {
 
 export interface IReducer<State> {
     (state: State, action: IAction<any>): State
-    on<ReturnType, ArgType>(action: TActionFunction<IFunctionThatReturn<ReturnType, ArgType>>, reduce: (state: State, action: IAction<ReturnType>) => State): IReducer<State>;
-    onAsync<ReturnType, ArgType>(action: TActionFunction<IFunctionThatReturn<Promise<ReturnType>, ArgType>>, reduce: (state: State, action: IAction<ReturnType>) => State): IReducer<State>;
+    on<ReturnType, ArgType>(action: TActionCreatorFunction<IFunctionThatReturn<ReturnType, ArgType>>, reduce: (state: State, action: IAction<ReturnType>) => State): IReducer<State>;
+    onAsync<ReturnType, ArgType>(action: TActionCreatorFunction<IFunctionThatReturn<Promise<ReturnType>, ArgType>>, reduce: (state: State, action: IAction<ReturnType>) => State): IReducer<State>;
 }
 
 export function createReducer<State>(onInit: () => State) {
@@ -52,7 +53,7 @@ export function createReducer<State>(onInit: () => State) {
     });
 
     reducer.on = <ReturnType, ArgType>(
-        action: TActionFunction<IFunctionThatReturn<ReturnType, ArgType>>,
+        action: TActionCreatorFunction<IFunctionThatReturn<ReturnType, ArgType>>,
         reduce: TReducerFunction<ReturnType>
     ) => {
         actionsMap.set(action.type, reduce);
@@ -61,7 +62,7 @@ export function createReducer<State>(onInit: () => State) {
 
 
 
-    type TAsyncAction<ReturnType, ArgType> = TActionFunction<IFunctionThatReturn<Promise<ReturnType>, ArgType>>;
+    type TAsyncAction<ReturnType, ArgType> = TActionCreatorFunction<IFunctionThatReturn<Promise<ReturnType>, ArgType>>;
 
     function onAsync<ReturnType, ArgType>(
         action: TAsyncAction<ReturnType, ArgType>,
