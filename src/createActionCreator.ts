@@ -1,6 +1,6 @@
 import {IAction, IDispatcherFunction} from './Interfaces';
 
-type TAnyFunction = (...args: any[]) => any;
+export type TAnyFunction = (...args: any[]) => any;
 
 /**
  * Action Creator function interface.

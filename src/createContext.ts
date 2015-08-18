@@ -1,14 +1,15 @@
 import {IAction} from './Interfaces';
-import {IActionCreator, InitAction} from './createAction';
+import {InitAction} from './createAction';
+import {IActionCreator, TAnyFunction} from './createActionCreator';
 
 interface IContextOptions<Actions, ReduceState> {
-    actions: Actions,
+    actions?: Actions,
     reduceState(state: ReduceState, action: IAction<any>): ReduceState,
 }
 
 type TListener = () => void;
 
-abstract class ContextClass<Actions, ReducerState, Parent> {
+export abstract class ContextClass<Actions, ReducerState, Parent> {
     actions: Actions;
 
     private state = {} as ReducerState;
@@ -51,7 +52,7 @@ abstract class ContextClass<Actions, ReducerState, Parent> {
         return (action: IAction<any>) => this.dispatch(action);
     }
 
-    private prepareAction<Func>(actionCreatorFunction: IActionCreator<Func>) {
+    private prepareAction<Func extends TAnyFunction>(actionCreatorFunction: IActionCreator<Func>) {
         const dispatch = this.getDispatchFunction();
         return actionCreatorFunction.setDispatcher(dispatch);
     }
@@ -59,7 +60,7 @@ abstract class ContextClass<Actions, ReducerState, Parent> {
     setActions(actions: Actions) {
         Object.keys(actions).forEach((key) => {
             if (actions[key].setDispatcher) {
-                actions[key] = this.prepareAction(<IActionCreator<any>> actions[key]);
+                actions[key] = this.prepareAction(<IActionCreator<TAnyFunction>> actions[key]);
             }
         });
         this.actions = actions;
@@ -77,7 +78,6 @@ abstract class ContextClass<Actions, ReducerState, Parent> {
     toJSON() {
         return this.getState();
     }
-
 }
 
 export function createContext<Actions, ReducerState>(options: IContextOptions<Actions, ReducerState>) {

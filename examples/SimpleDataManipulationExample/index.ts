@@ -24,13 +24,13 @@ class Todo {
 
 const TodoList = createReducer(() => <Todo[]> []);
 
-TodoList.on(AddTodo, (state, action) => {
-    return state.concat(new Todo(action.payload));
+TodoList.on(AddTodo, (state, payload) => {
+    return state.concat(new Todo(payload));
 });
 
 
-TodoList.on(ResolveTodo, (state, action) => {
-    return state.slice().splice(state.findIndex((value) => value.id === action.payload), 1);
+TodoList.on(ResolveTodo, (state, payload) => {
+    return state.slice().splice(state.findIndex((value) => value.id === payload), 1);
 });
 
 // Create Data Context

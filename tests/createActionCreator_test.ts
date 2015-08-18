@@ -8,6 +8,8 @@ describe('createActionCreator — function that helps to create action creator 
         });
 
         expect(creator.type).toBe('creator');
+        expect(typeof creator.is).toBe('function');
+        expect(typeof creator.setDispatcher).toBe('function');
     });
 
     it('should create `is` method', () => {
