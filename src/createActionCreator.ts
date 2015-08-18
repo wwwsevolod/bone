@@ -16,21 +16,29 @@ export interface IActionCreator<FunctionType extends TAnyFunction> {
      * Returns true if provided action is 'instance of' ActionCreator
      */
     is(action: IAction<any>): boolean;
-    bind(thisArg): FunctionType;
+    bind<This extends {dispatcher: IDispatcherFunction}>(thisArg: This): FunctionType;
 }
+
+const names = new Set<string>();
 
 export type TActionCreatorFunction<ActionFunction extends TAnyFunction> = ActionFunction & IActionCreator<ActionFunction>;
 
 export function createActionCreator<ActionFunction extends TAnyFunction>(actionName: string, func: ActionFunction) {
-    var converted = <TActionCreatorFunction<ActionFunction>> func;
+    const converted = <TActionCreatorFunction<ActionFunction>> func;
 
-    converted.is = (action) => action.type === converted.type;
+    if (true) {// TODO: use process.env for dev\test\prod.
+        if (names.has(actionName)) {
+            console.warn(`You have declared more than one action named '${actionName}', be careful.`);
+        } else {
+            names.add(actionName);
+        }
+    }
+
+    converted.is = (action: IAction<any>) => action.type === converted.type;
     converted.type = actionName;
 
     converted.setDispatcher = (dispatcher: IDispatcherFunction) => {
-        return converted.bind({
-            dispatcher: dispatcher
-        });
+        return converted.bind({dispatcher});
     };
 
     return converted;

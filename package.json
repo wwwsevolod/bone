@@ -3,7 +3,12 @@
   "version": "0.1.0",
   "description": "Typescript flux implementation without flux",
   "main": "index.js",
-  "keywords": ["typescript", "flux", "redux", "bone"],
+  "keywords": [
+    "typescript",
+    "flux",
+    "redux",
+    "bone"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,6 +28,7 @@
   },
   "devDependencies": {
     "awesome-typescript-loader": "^0.11.3",
+    "gulp": "^3.9.0",
     "jasmine": "^2.3.2",
     "typescript": "^1.6.0-dev.20150810",
     "webpack": "^1.11.0"
