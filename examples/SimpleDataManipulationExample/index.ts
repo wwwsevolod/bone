@@ -1,6 +1,7 @@
 import {createAction} from '../../src/createAction';
 import {createContext} from '../../src/createContext';
 import {createReducer} from '../../src/createReducer';
+import {IAction} from '../../src/Interfaces';
 
 
 //Create actions
@@ -46,7 +47,7 @@ const TestContext = createContext({
         addTodo: AddTodo,
         resolveTodo: ResolveTodo
     },
-    reduceState(state: ITodoListState, action): ITodoListState {
+    reduceState(state: ITodoListState, action: IAction<any>): ITodoListState {
         return {
             todos: TodoList(state.todos, action)
         };

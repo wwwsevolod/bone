@@ -1,7 +1,7 @@
 import {createAsyncAction, STATUS_BEGIN, STATUS_FAILURE, STATUS_SUCCESS} from '../src/createAsyncAction';
 import {IAsyncAction} from '../src/Interfaces';
 
-describe('createAction — function that creates action creator from function and saves its signature', () => {
+describe('createAsyncAction — function that creates action creator from function and saves its signature', () => {
     it('should dispatch IAsyncAction at begin and at success', (done) => {
         const dispatcher = {
             dispatcher(action: IAsyncAction<any>) {}
@@ -20,7 +20,7 @@ describe('createAction — function that creates action creator from function a
 
         expect(dispatcher.dispatcher).toHaveBeenCalledWith({
             type: 'creator',
-            payload: { arguments: [] },
+            payload: { arguments: [1] },
             status: STATUS_BEGIN
         });
 
@@ -37,7 +37,7 @@ describe('createAction — function that creates action creator from function a
         });
     });
 
-    it('should dispatch IAsyncAction at begin and at failure (on actionFunction call, not on reject of Promise, if error occured)', (done) => {
+    it('should dispatch IAsyncAction at begin and at failure (on actionFunction call, not on reject of Promise, if error occured)', () => {
         const dispatcher = {
             dispatcher(action: IAsyncAction<any>) { }
         };
@@ -64,6 +64,7 @@ describe('createAction — function that creates action creator from function a
         expect(dispatcher.dispatcher).toHaveBeenCalledWith({
             type: 'creator',
             payload: error,
+            error: true,
             status: STATUS_FAILURE
         });
     });
@@ -96,8 +97,11 @@ describe('createAction — function that creates action creator from function a
             expect(dispatcher.dispatcher).toHaveBeenCalledWith({
                 type: 'creator',
                 payload: error,
+                error: true,
                 status: STATUS_FAILURE
             });
+
+            done();
         });
     });
 });

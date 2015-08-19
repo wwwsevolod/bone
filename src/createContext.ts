@@ -9,7 +9,7 @@ interface IContextOptions<Actions, ReduceState> {
 
 type TListener = () => void;
 
-export abstract class ContextClass<Actions, ReducerState, Parent> {
+export abstract class ContextClass<Actions extends {[key:string]: any}, ReducerState, Parent> {
     actions: Actions;
 
     private state = {} as ReducerState;
@@ -58,7 +58,7 @@ export abstract class ContextClass<Actions, ReducerState, Parent> {
     }
 
     setActions(actions: Actions) {
-        Object.keys(actions).forEach((key) => {
+        Object.keys(actions).forEach((key: string) => {
             if (actions[key].setDispatcher) {
                 actions[key] = this.prepareAction(<IActionCreator<TAnyFunction>> actions[key]);
             }

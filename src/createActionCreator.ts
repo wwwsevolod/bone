@@ -26,7 +26,7 @@ export type TActionCreatorFunction<ActionFunction extends TAnyFunction> = Action
 export function createActionCreator<ActionFunction extends TAnyFunction>(actionName: string, func: ActionFunction) {
     const converted = <TActionCreatorFunction<ActionFunction>> func;
 
-    if (true) {// TODO: use process.env for dev\test\prod.
+    if (false) {// TODO: use process.env for dev\test\prod.
         if (names.has(actionName)) {
             console.warn(`You have declared more than one action named '${actionName}', be careful.`);
         } else {

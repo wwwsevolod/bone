@@ -29,6 +29,9 @@
   "devDependencies": {
     "awesome-typescript-loader": "^0.11.3",
     "gulp": "^3.9.0",
+    "gulp-babel": "^5.2.0",
+    "gulp-jasmine": "^2.0.1",
+    "gulp-typescript": "^2.8.1",
     "jasmine": "^2.3.2",
     "typescript": "^1.6.0-dev.20150810",
     "webpack": "^1.11.0"

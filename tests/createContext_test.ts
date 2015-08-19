@@ -1,6 +1,7 @@
 import {createContext} from '../src/createContext';
 import {createReducer} from '../src/createReducer';
 import {createAction} from '../src/createAction';
+import {IAction} from '../src/Interfaces';
 
 describe('createContext — function that constructs new class for Context', () => {
     const TestAction = createAction('TestAction', (test: number) => test);
@@ -10,9 +11,9 @@ describe('createContext — function that constructs new class for Context', () 
     }));
 
     TestReducer.on(TestAction, (state, payload) => {
-        return Object.assign(state, {
+        return {
             result: state.result + payload
-        });
+        };
     });
 
 
@@ -28,7 +29,7 @@ describe('createContext — function that constructs new class for Context', () 
                 TestAction
             },
 
-            reduceState(state: ITestContextState, action): ITestContextState {
+            reduceState(state: ITestContextState, action: IAction<any>): ITestContextState {
                 return {
                     test: TestReducer(state.test, action)
                 };
@@ -37,7 +38,7 @@ describe('createContext — function that constructs new class for Context', () 
 
         const context = new TestContext();
 
-        expect(context.getState()).toBe({
+        expect(context.getState()).toEqual({
             test: {
                 result: 123
             }
@@ -45,7 +46,7 @@ describe('createContext — function that constructs new class for Context', () 
 
         context.actions.TestAction(1);
 
-        expect(context.getState()).toBe({
+        expect(context.getState()).toEqual({
             test: {
                 result: 124
             }

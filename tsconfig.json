@@ -2,8 +2,8 @@
     "compilerOptions": {
         "jsx": "preserve",
         "noEmit": true,
-        "rootDir": "src",
         "target": "es6",
+        "noImplicitAny": true,
         "experimentalDecorators": true
     },
     "filesGlob": [

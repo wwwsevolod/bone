@@ -7,7 +7,7 @@ describe('createReducer — a way to run out from endless switch-case statements
     const IncrementAsyncAction = createAsyncAction('asyncIncrement', (n: number = 1) => Promise.resolve(n));
 
     const error = new Error('test');
-    const AsyncActionThatWouldFail = createAsyncAction('asyncFail', (n: number = 1) => Promise.reject(error));
+    const AsyncActionThatWouldFail = createAsyncAction('asyncFail', (n: number = 1) => new Promise<number>(() => { throw error; })); // Because Promise.reolve(123).then(() => {throw error}) is inferring as Promise<void>
 
     it('should create right-shaped reducer function', () => {
         const counter = createReducer(() => 0);

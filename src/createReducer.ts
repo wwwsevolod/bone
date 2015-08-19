@@ -51,7 +51,7 @@ export function createReducer<State>(onInit: () => State) {
         reduceSuccess: TReducerFunction<PromiseType>,
         reduceFailure?: TReducerFunction<Error>,
         reduceBegin?: TReducerFunction<{ arguments: any[] }>
-    ) => reducer.on(action, (state, payload, action: IAsyncAction<PromiseType|Error|{ arguments: any[] }>) => {
+    ) => reducer.on(action, (state: State, payload: any, action: IAsyncAction<PromiseType|Error|{ arguments: any[] }>) => {
         if (action.status === STATUS_BEGIN) {
             if (reduceBegin) {
                 return reduceBegin(state, payload, <IAsyncAction<{ arguments: any[] }>> action);
