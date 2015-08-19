@@ -31,7 +31,7 @@ export abstract class ContextClass<Actions extends {[key:string]: any}, ReducerS
         this.childs.push(child);
     }
 
-    dispatch(action: IAction<any>) {
+    private dispatch(action: IAction<any>) {
         this.state = this.reduceState(this.state, action);
         this.emitChange();
     }
@@ -52,18 +52,22 @@ export abstract class ContextClass<Actions extends {[key:string]: any}, ReducerS
         return (action: IAction<any>) => this.dispatch(action);
     }
 
-    private prepareAction<Func extends TAnyFunction>(actionCreatorFunction: IActionCreator<Func>) {
-        const dispatch = this.getDispatchFunction();
-        return actionCreatorFunction.setDispatcher(dispatch);
+    private bindAction<Func extends TAnyFunction>(actionCreatorFunction: IActionCreator<Func>) {
+        return actionCreatorFunction.setDispatcher(this.getDispatchFunction());
     }
 
-    setActions(actions: Actions) {
-        Object.keys(actions).forEach((key: string) => {
+    private bindActions(actions: Actions) {
+        return Object.keys(actions).reduce((accum: any, key: string) => {
             if (actions[key].setDispatcher) {
-                actions[key] = this.prepareAction(<IActionCreator<TAnyFunction>> actions[key]);
+                accum[key] = this.bindAction(<IActionCreator<TAnyFunction>> actions[key]);
+            } else if (typeof actions[key] === 'object') {
+                accum[key] = this.bindActions(actions[key])
             }
-        });
-        this.actions = actions;
+        }, {});
+    }
+
+    protected setActions(actions: Actions) {
+        this.actions = this.bindActions(actions);
     }
 
     serialize() {
