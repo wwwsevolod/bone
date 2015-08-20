@@ -7,22 +7,26 @@ export interface IFunctionThatReturn<ReturnType, ArgType> {
     (options: ArgType): ReturnType;
 }
 
+interface IBeginActionPayload {
+    arguments: any[]
+}
+
+type TAsyncAction<PromiseType, ArgType> = TActionCreatorFunction<IFunctionThatReturn<Promise<PromiseType>, ArgType>>;
+type TReducerFunction<State, P> = (state: State, payload: P, action: IAction<P>) => State;
+
 export function createReducer<State>(onInit: () => State) {
     interface IReducer<State> {
         (state: State, action: IAction<any>): State
         on<ReturnType, ArgType>(action: TActionCreatorFunction<IFunctionThatReturn<ReturnType, ArgType>>, reduce: (state: State, payload: ReturnType, action: IAction<ReturnType>) => State): IReducer<State>;
         onAsync<ReturnType, ArgType>(
             action: TAsyncAction<ReturnType, ArgType>,
-            reduceSuccess: TReducerFunction<ReturnType>,
-            reduceFailure?: TReducerFunction<Error>,
-            reduceBegin?: TReducerFunction<{ arguments: any[] }>
+            reduceSuccess: TReducerFunction<State, ReturnType>,
+            reduceFailure?: TReducerFunction<State, Error>,
+            reduceBegin?: TReducerFunction<State, IBeginActionPayload>
         ): IReducer<State>;
     }
 
-    type TReducerFunction<P> = (state: State, payload: P, action: IAction<P>) => State;
-    type TActionMapValue = TReducerFunction<any>;
-
-    const actionsMap = new Map<any, TActionMapValue>();
+    const actionsMap = new Map<any, TReducerFunction<State, any>>();
 
     const reducer = <IReducer<State>> ((state: State, action: IAction<any>|IAsyncAction<any>) => {
         const reduceHandler = actionsMap.get(action.type);
@@ -36,21 +40,17 @@ export function createReducer<State>(onInit: () => State) {
 
     reducer.on = <ReturnType, ArgType>(
         action: TActionCreatorFunction<IFunctionThatReturn<ReturnType, ArgType>>,
-        reduce: TReducerFunction<ReturnType>
+        reduce: TReducerFunction<State, ReturnType>
     ) => {
         actionsMap.set(action.type, reduce);
         return reducer;
     };
 
-
-
-    type TAsyncAction<PromiseType, ArgType> = TActionCreatorFunction<IFunctionThatReturn<Promise<PromiseType>, ArgType>>;
-
     reducer.onAsync = <PromiseType, ArgType>(
         action: TAsyncAction<PromiseType, ArgType>,
-        reduceSuccess: TReducerFunction<PromiseType>,
-        reduceFailure?: TReducerFunction<Error>,
-        reduceBegin?: TReducerFunction<{ arguments: any[] }>
+        reduceSuccess: TReducerFunction<State, PromiseType>,
+        reduceFailure?: TReducerFunction<State, Error>,
+        reduceBegin?: TReducerFunction<State, { arguments: any[] }>
     ) => reducer.on(action, (state: State, payload: any, action: IAsyncAction<PromiseType|Error|{ arguments: any[] }>) => {
         if (action.status === STATUS_BEGIN) {
             if (reduceBegin) {

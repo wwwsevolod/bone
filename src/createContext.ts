@@ -63,6 +63,7 @@ export abstract class ContextClass<Actions extends {[key:string]: any}, ReducerS
             } else if (typeof actions[key] === 'object') {
                 accum[key] = this.bindActions(actions[key])
             }
+            return accum;
         }, {});
     }
 
