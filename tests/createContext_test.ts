@@ -25,10 +25,6 @@ describe('createContext — function that constructs new class for Context', () 
         }
 
         const TestContext = createContext({
-            actions: {
-                TestAction
-            },
-
             reduceState(state: ITestContextState, action: IAction<any>): ITestContextState {
                 return {
                     test: TestReducer(state.test, action)
@@ -44,7 +40,7 @@ describe('createContext — function that constructs new class for Context', () 
             }
         });
 
-        context.actions.TestAction(1);
+        new TestAction(context.getDispatchFunction()).dispatch(1);
 
         expect(context.getState()).toEqual({
             test: {

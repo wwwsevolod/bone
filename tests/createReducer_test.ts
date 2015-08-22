@@ -46,17 +46,17 @@ describe('createReducer — a way to run out from endless switch-case statements
         });
 
         it('should reduce to knew state on known action', () => {
-            IncrementAction.setDispatcher((action) => {
+            new IncrementAction((action) => {
                 expect(counter(0, action)).toBe(0 + action.payload);
-            })(10);
+            }).dispatch(10);
 
-            IncrementAction.setDispatcher((action) => {
+            new IncrementAction((action) => {
                 expect(counter(0, action)).toBe(0 + action.payload);
-            })(-10);
+            }).dispatch(-10);
         });
 
         it('should reduce to knew state on known async action', (done) => {
-            IncrementAsyncAction.setDispatcher((action) => {
+            new IncrementAsyncAction((action) => {
                 if (action.type === STATUS_BEGIN) {
                     expect(counter(0, action)).toBe(1);
                 }
@@ -66,11 +66,11 @@ describe('createReducer — a way to run out from endless switch-case statements
 
                     done();
                 }
-            })(10);
+            }).dispatch(10);
         });
 
         it('should reduce to knew state on known async action and handle errors', (done) => {
-            AsyncActionThatWouldFail.setDispatcher((action) => {
+            new AsyncActionThatWouldFail((action) => {
                 if (action.type === STATUS_BEGIN) {
                     expect(counter(0, action)).toBe(2);
                 }
@@ -80,7 +80,7 @@ describe('createReducer — a way to run out from endless switch-case statements
 
                     done();
                 }
-            })(10);
+            }).dispatch(10);
         });
     });
 });

@@ -12,11 +12,11 @@ describe('createAsyncAction — function that creates action creator from funct
         const funcCreator = (arg: number) => {
             return Promise.resolve(123 + arg);
         };
-        const creator = createAsyncAction('creator', funcCreator);
+        const Creator = createAsyncAction('creator', funcCreator);
 
-        const actionCreator = creator.setDispatcher(dispatcher.dispatcher);
+        const actionCreator = new Creator(dispatcher.dispatcher);
 
-        const promise = actionCreator(1);
+        const promise = actionCreator.dispatch(1);
 
         expect(dispatcher.dispatcher).toHaveBeenCalledWith({
             type: 'creator',
@@ -49,11 +49,11 @@ describe('createAsyncAction — function that creates action creator from funct
         const funcCreator = (arg: number):Promise<any> => {
             throw error;
         };
-        const creator = createAsyncAction('creator', funcCreator);
+        const Creator = createAsyncAction('creator', funcCreator);
 
-        const actionCreator = creator.setDispatcher(dispatcher.dispatcher);
+        const actionCreator = new Creator(dispatcher.dispatcher);
 
-        expect(() => actionCreator(1)).toThrow();
+        expect(() => actionCreator.dispatch(1)).toThrow();
 
         expect(dispatcher.dispatcher).toHaveBeenCalledWith({
             type: 'creator',
@@ -81,11 +81,11 @@ describe('createAsyncAction — function that creates action creator from funct
         const funcCreator = (arg: number): Promise<any> => {
             return Promise.reject(error);
         };
-        const creator = createAsyncAction('creator', funcCreator);
+        const Creator = createAsyncAction('creator', funcCreator);
 
-        const actionCreator = creator.setDispatcher(dispatcher.dispatcher);
+        const actionCreator = new Creator(dispatcher.dispatcher);
 
-        const promise = actionCreator(1);
+        const promise = actionCreator.dispatch(1);
 
         expect(dispatcher.dispatcher).toHaveBeenCalledWith({
             type: 'creator',

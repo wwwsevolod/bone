@@ -12,3 +12,5 @@ export interface IAsyncAction<PayloadType> extends IAction<PayloadType> {
 export interface IDispatcherFunction {
     (action: IAction<any>): void;
 }
+
+export type TAnyFunction = (...args: any[]) => any;

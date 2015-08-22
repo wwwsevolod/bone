@@ -14,15 +14,15 @@ describe('createAction — function that creates action creator from function a
         const funcCreator = (arg: number) => {
             return 123 + arg;
         };
-        const creator = createAction('creator', funcCreator);
+        const Creator = createAction('creator', funcCreator);
 
-        const actionCreator = creator.setDispatcher((action: IAction<any>) => {
+        const actionCreator = new Creator((action: IAction<any>) => {
             it('should dispatch good shaped Action', () => {
                 expect(action.payload).toBe(4);
                 expect(action.type).toBe('creator');
             });
         });
 
-        expect(actionCreator(1)).toBe(funcCreator(1));
+        expect(actionCreator.dispatch(1)).toBe(funcCreator(1));
     });
 });

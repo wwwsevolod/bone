@@ -34,7 +34,10 @@
     "gulp-jasmine": "^2.0.1",
     "gulp-typescript": "^2.8.1",
     "jasmine": "^2.3.2",
-    "typescript": "^1.6.0-dev.20150820",
+    "typescript": "^1.6.0-dev.20150822",
     "webpack": "^1.11.0"
+  },
+  "optionalDependencies": {
+    "react": "^0.13.3"
   }
 }

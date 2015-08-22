@@ -43,10 +43,6 @@ interface ITodoListState {
 }
 
 const TestContext = createContext({
-    actions: {
-        addTodo: AddTodo,
-        resolveTodo: ResolveTodo
-    },
     reduceState(state: ITodoListState, action: IAction<any>): ITodoListState {
         return {
             todos: TodoList(state.todos, action)
@@ -59,12 +55,12 @@ const context = new TestContext();
 // You will see {todos: []}
 console.log(context.getState());
 
-context.actions.addTodo('Finish read of this example');
+new AddTodo(context.getDispatchFunction()).dispatch('Finish read of this example');
 
 // You will see {todos: [<Todo>{title: 'Finish read of this example', isResolved: false}]}
 console.log(context.getState());
 
-context.actions.resolveTodo(context.getState().todos[0]);
+new ResolveTodo(context.getDispatchFunction()).dispatch(context.getState().todos[0]);
 
 // You just read first example, now your Todo list is empty!
 console.log(context.getState());
