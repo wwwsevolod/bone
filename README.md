@@ -2,8 +2,6 @@
 
 __THIS IS DEV PREVIEW.__
 
-It is partialy compatible with redux API.
-
 It is built with 5 principles in mind:
 
 1. Type safe data layer manipilation with minimal as possible overhead on typing. Redux is too dynamic and can't be typed enough with its reducers mechanism, because you don't explicitly call it (may be in future version of TS this would be fixed, but it is hard dynamic approach).
@@ -17,6 +15,10 @@ In result you get autocomplete, type checking, method to separate layer to unit 
 ### Differencies with Redux
 
 There is no "Store" concept, but "Context" on its place. It is quite similiar, but could be more than one instance for different layers of application, to separate concerns.
+
+Also, you can use simple functions as reducers, with switch-case statement, but for types and autocmpletion use `createReducer` function.
+
+Currently, becauze typescript type system, you'll need to call reducers explicitely.
 
 ### Why typescript? Why not Flow?
 
