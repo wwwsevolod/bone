@@ -1,7 +1,7 @@
-import {InitAction} from './createAction';
-import {ActionCreator} from './createActionCreator';
+import {InitAction} from './ActionCreator';
+import {AbstractActionCreator} from './AbstractActionCreator';
 import {IAction, IAsyncAction, IDispatcherFunction, TAnyFunction} from './Interfaces';
-import {STATUS_BEGIN, STATUS_FAILURE, STATUS_SUCCESS} from './createAsyncAction';
+import {STATUS_BEGIN, STATUS_FAILURE, STATUS_SUCCESS} from './AsyncActionCreator';
 
 export interface IFunctionThatReturn<ReturnType, ArgType> {
     (options: ArgType): ReturnType;
@@ -11,19 +11,21 @@ interface IBeginActionPayload {
     arguments: any[]
 }
 
-interface ActionCreatorClass<ActionFunction extends TAnyFunction> {
-    new (dispatcher: IDispatcherFunction): ActionCreator<ActionFunction>;
-    __dispatch: ActionFunction;
-    type: string;
+interface IActionCreatorClass<ActionFunction extends TAnyFunction> {
+    new (dispatcher: IDispatcherFunction): AbstractActionCreator;
+    prototype: {
+        dispatch: ActionFunction
+    };
+    getActionType(): string;
 }
 
-type TAsyncAction<PromiseType, ArgType> = ActionCreatorClass<IFunctionThatReturn<Promise<PromiseType>, ArgType>>;
+type TAsyncAction<PromiseType, ArgType> = IActionCreatorClass<IFunctionThatReturn<Promise<PromiseType>, ArgType>>;
 type TReducerFunction<State, P> = (state: State, payload: P, action: IAction<P>) => State;
 
 export function createReducer<State>(onInit: () => State) {
     interface IReducer<State> {
         (state: State, action: IAction<any>): State
-        on<ReturnType, ArgType>(actionClass: ActionCreatorClass<IFunctionThatReturn<ReturnType, ArgType>>, reduce: (state: State, payload: ReturnType, action: IAction<ReturnType>) => State): IReducer<State>;
+        on<ReturnType, ArgType>(actionClass: IActionCreatorClass<IFunctionThatReturn<ReturnType, ArgType>>, reduce: (state: State, payload: ReturnType, action: IAction<ReturnType>) => State): IReducer<State>;
         onAsync<ReturnType, ArgType>(
             actionClass: TAsyncAction<ReturnType, ArgType>,
             reduceSuccess: TReducerFunction<State, ReturnType>,
@@ -45,10 +47,10 @@ export function createReducer<State>(onInit: () => State) {
     });
 
     reducer.on = <ReturnType, ArgType>(
-        actionClass: ActionCreatorClass<IFunctionThatReturn<ReturnType, ArgType>>,
+        actionClass: IActionCreatorClass<IFunctionThatReturn<ReturnType, ArgType>>,
         reduce: TReducerFunction<State, ReturnType>
     ) => {
-        actionsMap.set(actionClass.type, reduce);
+        actionsMap.set(actionClass.getActionType(), reduce);
         return reducer;
     };
 

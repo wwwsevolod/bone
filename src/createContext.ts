@@ -1,5 +1,5 @@
 import {IAction} from './Interfaces';
-import {InitAction} from './createAction';
+import {InitAction} from './ActionCreator';
 
 interface IContextOptions<Actions, ReduceState> {
     actions?: Actions,

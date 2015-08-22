@@ -1,10 +1,14 @@
 import {createContext} from '../src/createContext';
 import {createReducer} from '../src/createReducer';
-import {createAction} from '../src/createAction';
+import {ActionCreator} from '../src/ActionCreator';
 import {IAction} from '../src/Interfaces';
 
 describe('createContext — function that constructs new class for Context', () => {
-    const TestAction = createAction('TestAction', (test: number) => test);
+    class TestAction extends ActionCreator {
+        dispatch(test: number) {
+            return test;
+        }
+    }
 
     const TestReducer = createReducer(() => ({
         result: 123

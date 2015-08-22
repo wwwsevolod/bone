@@ -1,13 +1,21 @@
-import {createAction} from '../../src/createAction';
+import {ActionCreator} from '../../src/ActionCreator';
 import {createContext} from '../../src/createContext';
 import {createReducer} from '../../src/createReducer';
 import {IAction} from '../../src/Interfaces';
 
 
 //Create actions
-const AddTodo = createAction('AddTodo', (text: string) => text);
-const ResolveTodo = createAction('ResolveTodo', (todo: Todo) => todo.id);
+class AddTodo extends ActionCreator {
+    dispatch(text: string) {
+        return text;
+    }
+}
 
+class ResolveTodo extends ActionCreator {
+    dispatch(todo: Todo) {
+        return todo.id;
+    }
+}
 
 // Create Reducer
 let counter = 0;

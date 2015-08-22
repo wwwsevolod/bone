@@ -1,13 +1,28 @@
 import {createReducer} from '../src/createReducer';
-import {createAction, InitAction} from '../src/createAction';
-import {createAsyncAction, STATUS_BEGIN, STATUS_FAILURE, STATUS_SUCCESS} from '../src/createAsyncAction';
+import {ActionCreator, InitAction} from '../src/ActionCreator';
+import {AsyncActionCreator, STATUS_BEGIN, STATUS_FAILURE, STATUS_SUCCESS} from '../src/AsyncActionCreator';
 
 describe('createReducer — a way to run out from endless switch-case statements in handling sync and async actions', () => {
-    const IncrementAction = createAction('increment', (n: number = 1) => n);
-    const IncrementAsyncAction = createAsyncAction('asyncIncrement', (n: number = 1) => Promise.resolve(n));
+    class IncrementAction extends ActionCreator {
+        dispatch(n: number = 1) {
+            return n;
+        }
+    }
+
+    class IncrementAsyncAction extends AsyncActionCreator {
+        dispatch(n: number = 1) {
+            return Promise.resolve(n);
+        }
+    }
 
     const error = new Error('test');
-    const AsyncActionThatWouldFail = createAsyncAction('asyncFail', (n: number = 1) => new Promise<number>(() => { throw error; })); // Because Promise.reolve(123).then(() => {throw error}) is inferring as Promise<void>
+
+    class AsyncActionThatWouldFail extends AsyncActionCreator {
+        dispatch(n: number = 1) {
+            return new Promise<number>(() => { throw error; });
+        }
+    }
+
 
     it('should create right-shaped reducer function', () => {
         const counter = createReducer(() => 0);
@@ -33,7 +48,7 @@ describe('createReducer — a way to run out from endless switch-case statements
 
         it('should respond to init action with initial state', () => {
             expect(counter(1, {
-                type: InitAction.type,
+                type: InitAction.getActionType(),
                 payload: null
             })).toBe(0);
         });

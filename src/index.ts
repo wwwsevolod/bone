@@ -1,7 +1,7 @@
 export * from './Interfaces';
-export * from './createActionCreator';
-export * from './createAction';
-export * from './createAsyncAction';
+export * from './AbstractActionCreator';
+export * from './ActionCreator';
+export * from './AsyncActionCreator';
 export * from './createContext';
 export * from './createReducer';
 
