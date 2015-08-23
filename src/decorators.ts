@@ -34,10 +34,12 @@ function getAction(ActionClass: AbstractActionCreatorClass) {
 export function InjectAction(target: React.Component<any, any>, key: string) {
     const ActionClass: AbstractActionCreatorClass = Reflect.getMetadata('design:type', target, key);
 
-    // any on getter return because typescript defineProperty definition
-    Object.defineProperty(target, key, { get(): any {
-        return getAction.call(this, ActionClass);
-    }});
+    Object.defineProperty(target, key, {
+        // any on getter return because typescript defineProperty definition
+        get(): any {
+            return getAction.call(this, ActionClass);
+        }
+    });
 }
 
 /**
@@ -53,11 +55,12 @@ export function InjectActionCreator(ActionClass: AbstractActionCreatorClass) {
 
 
 export interface ComponentToInject extends React.Component<any, any> {
-    contextState: any
+    contextState: any;
+    refs: any;
 }
 
 export interface ComponentToInjectClass extends React.ComponentClass<any> {
-    new(a: any, b: any): ComponentToInject
+    new(...any: any[]): ComponentToInject
 }
 
 export function Connect<ContextState>(contextClass: { new (...any: any[]): Context<ContextState> }, getter?: (state: ContextState) => any) {
@@ -76,9 +79,12 @@ export function Connect<ContextState>(contextClass: { new (...any: any[]): Conte
             throw new Error('there is contextState declartion in contextTypes already');
         }
 
-        contextTypes.contextState = React.PropTypes.any;
+        contextTypes.context = React.PropTypes.instanceOf(contextClass).isRequired;
+        contextTypes.contextState = React.PropTypes.any.isRequired;
+        contextTypes.dispatchOnContext = React.PropTypes.func.isRequired;
 
         Object.defineProperty(target.prototype, 'contextState', {
+            // any on getter return because typescript defineProperty definition
             get(): any {
                 return getter(this.context.contextState);
             }
