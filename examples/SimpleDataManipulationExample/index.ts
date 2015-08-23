@@ -1,5 +1,5 @@
 import {ActionCreator} from '../../src/ActionCreator';
-import {createContext} from '../../src/createContext';
+import {Context} from '../../src/Context';
 import {createReducer} from '../../src/createReducer';
 import {IAction} from '../../src/Interfaces';
 
@@ -44,19 +44,21 @@ TodoList.on(ResolveTodo, (state, payload) => {
 
 // Create Data Context
 
-// May be in next TypeScript version you will not need to define interface of data context explitit
-// But for now it is only type overhead
+// May be in next TypeScript version you will not need to define interface of data context explitly
+// But for now it is main overhead on Types
 interface ITodoListState {
     todos: Todo[]
 }
 
-const TestContext = createContext({
-    reduceState(state: ITodoListState, action: IAction<any>): ITodoListState {
-        return {
-            todos: TodoList(state.todos, action)
-        };
+class TestContext extends Context<ITodoListState> {
+    init() {
+        this.setReducer((state, action) => {
+            return {
+                todos: TodoList(state.todos, action)
+            };
+        });
     }
-});
+}
 
 const context = new TestContext();
 

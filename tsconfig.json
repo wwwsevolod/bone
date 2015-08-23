@@ -4,7 +4,9 @@
         "noEmit": true,
         "target": "es6",
         "noImplicitAny": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "declarationFiles": true
     },
     "filesGlob": [
         "./node_modules/typescript/lib/lib.es6.d.ts",

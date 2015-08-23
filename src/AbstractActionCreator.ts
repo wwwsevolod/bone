@@ -30,3 +30,7 @@ export abstract class AbstractActionCreator {
 
     protected abstract wrapDispatch(dispatch: TAnyFunction): TAnyFunction;
 }
+
+export interface AbstractActionCreatorClass {
+    new (dispatcher: IDispatcherFunction): AbstractActionCreator
+}

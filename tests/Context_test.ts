@@ -1,9 +1,9 @@
-import {createContext} from '../src/createContext';
+import {Context} from '../src/Context';
 import {createReducer} from '../src/createReducer';
 import {ActionCreator} from '../src/ActionCreator';
 import {IAction} from '../src/Interfaces';
 
-describe('createContext — function that constructs new class for Context', () => {
+describe('Context — abstract class that needs to be extend to create new Context class for your application', () => {
     class TestAction extends ActionCreator {
         dispatch(test: number) {
             return test;
@@ -28,13 +28,15 @@ describe('createContext — function that constructs new class for Context', () 
             }
         }
 
-        const TestContext = createContext({
-            reduceState(state: ITestContextState, action: IAction<any>): ITestContextState {
-                return {
-                    test: TestReducer(state.test, action)
-                };
+        class TestContext extends Context<ITestContextState> {
+            init() {
+                this.setReducer((state, action) => {
+                    return {
+                        test: TestReducer(state.test, action)
+                    };
+                });
             }
-        });
+        }
 
         const context = new TestContext();
 

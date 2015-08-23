@@ -1,25 +1,31 @@
 import {IAction} from './Interfaces';
 import {InitAction} from './ActionCreator';
 
-interface IContextOptions<Actions, ReduceState> {
-    actions?: Actions,
-    reduceState(state: ReduceState, action: IAction<any>): ReduceState,
-}
+export type TListener = () => void;
 
-type TListener = () => void;
-
-export abstract class ContextClass<ReducerState> {
-    private state = {} as ReducerState;
-    private listeners: TListener[] = []
+export abstract class Context<ReducerState> {
+    protected state = <ReducerState> {};
+    private listeners: TListener[] = [];
 
     private emitChange() {
         this.listeners.forEach(listener => listener());
     }
 
-    protected abstract reduceState(state: ReducerState, action: IAction<any>): ReducerState;
+    constructor() {
+        this.init();
+    }
+
+    protected init() {}
+
+    private reducer: (state: ReducerState, action: IAction<any>) => ReducerState;
+
+    protected setReducer(reducer: (state: ReducerState, action: IAction<any>) => ReducerState) {
+        this.reducer = reducer;
+        new InitAction(this.getDispatchFunction()).dispatch();
+    }
 
     private dispatch(action: IAction<any>) {
-        this.state = this.reduceState(this.state, action);
+        this.state = this.reducer(this.state, action);
         this.emitChange();
     }
 
@@ -57,17 +63,3 @@ export abstract class ContextClass<ReducerState> {
         return this.getState();
     }
 }
-
-export function createContext<Actions, ReducerState>(options: IContextOptions<Actions, ReducerState>) {
-    return class GeneratedContext extends ContextClass<ReducerState> {
-        constructor() {
-            super();
-            new InitAction(this.getDispatchFunction()).dispatch();
-        }
-
-        protected reduceState(state: ReducerState, action: IAction<any>): ReducerState {
-            return options.reduceState(state, action);
-        }
-    }
-}
-
