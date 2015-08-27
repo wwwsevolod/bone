@@ -34,22 +34,25 @@ class Todo {
 
 
 // Create Data Context
-const TestContext = createContext(() => {
-    return {
-        todos: <Todo[]>[]
-    }
-}, (reduceHelper) => {
-    reduceHelper.on(AddTodo, (state, payload) => {
-        return Object.assign({}, state, {
-            todos: state.todos.concat(new Todo(payload))
+const TestContext = createContext({
+    getInitialState() {
+        return {
+            todos: <Todo[]>[]
+        }
+    },
+    setupReducers(reduceHelper) {
+        reduceHelper.on(AddTodo, (state, payload) => {
+            return Object.assign({}, state, {
+                todos: state.todos.concat(new Todo(payload))
+            });
         });
-    });
 
-    reduceHelper.on(ResolveTodo, (state, payload) => {
-        return Object.assign({}, state, {
-            todos: state.todos.filter((todo) => todo.id !== payload)
+        reduceHelper.on(ResolveTodo, (state, payload) => {
+            return Object.assign({}, state, {
+                todos: state.todos.filter((todo) => todo.id !== payload)
+            });
         });
-    });
+    }
 })
 
 const context = TestContext();

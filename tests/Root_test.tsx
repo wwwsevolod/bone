@@ -6,7 +6,11 @@ import {Connect} from '../src/decorators';
 
 // TODO: write more tests for Root
 describe('Root — React component, bridge for data context and react components', () => {
-    const TestContext = createContext(() => ({ test: '123' }));
+    const TestContext = createContext({
+        getInitialState() {
+            return { test: '123' }
+        }
+    });
 
     const context = TestContext();
 

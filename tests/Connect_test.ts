@@ -7,7 +7,13 @@ import {Component} from 'react';
 import 'reflect-metadata';
 
 describe('InjectAction', () => {
-    const TestContext = createContext(() => ({}), () => {});
+    const TestContext = createContext({
+        getInitialState() {
+            return {
+                test: 123
+            };
+        }
+    });
 
     it('should inject actionCreator instance with dispatcher from React context', () => {
         class TestAction extends ActionCreator {
@@ -30,8 +36,13 @@ describe('InjectAction', () => {
 });
 
 describe('Connect', () => {
-
-    const TestContext = createContext(() => ({test: 123}));
+    const TestContext = createContext({
+        getInitialState() {
+            return {
+                test: 123
+            };
+        }
+    });
 
     it('should get state from context and map it to contextState field in Component instance', () => {
         class TestAction extends ActionCreator {

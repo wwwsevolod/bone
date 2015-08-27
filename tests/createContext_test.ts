@@ -17,17 +17,20 @@ describe('Context — abstract class that needs to be extend to create new Conte
             }
         }
 
-        const TestContext = createContext(() => {
-            return {
-                test: {
-                    result: 123
-                }
-            };
-        }, (helper) => {
-            helper.on(TestAction, (state, payload) => {
-                state.test.result += payload;
-                return state;
-            });
+        const TestContext = createContext({
+            getInitialState() {
+                return {
+                    test: {
+                        result: 123
+                    }
+                };
+            },
+            setupReducers(helper) {
+                helper.on(TestAction, (state, payload) => {
+                    state.test.result += payload;
+                    return state;
+                });
+            }
         });
 
         const context = TestContext();

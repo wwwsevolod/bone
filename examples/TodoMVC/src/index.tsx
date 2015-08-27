@@ -39,31 +39,34 @@ class UnResolveTodo extends ActionCreator {
 
 
 // Create Data Context
-const TodoContext = createContext(() => {
-    return {
-        activeTodos: [] as Todo[],
-        resolvedTodos: [] as Todo[]
+const TodoContext = createContext({
+    getInitialState() {
+        return {
+            activeTodos: [] as Todo[],
+            resolvedTodos: [] as Todo[]
+        };
+    },
+    setupReducers(reduceHelper) {
+        reduceHelper.on(AddTodo, (state, payload) => {
+            return Object.assign({}, state, {
+                activeTodos: state.activeTodos.concat(payload)
+            });
+        });
+
+        reduceHelper.on(ResolveTodo, (state, payload) => {
+            return Object.assign({}, state, {
+                activeTodos: state.activeTodos.filter((todo) => todo !== payload),
+                resolvedTodos: state.resolvedTodos.concat(payload)
+            });
+        });
+
+        reduceHelper.on(UnResolveTodo, (state, payload) => {
+            return Object.assign({}, state, {
+                activeTodos: state.activeTodos.concat(payload),
+                resolvedTodos: state.resolvedTodos.filter((todo) => todo !== payload)
+            });
+        });
     }
-}, (reduceHelper) => {
-    reduceHelper.on(AddTodo, (state, payload) => {
-        return Object.assign({}, state, {
-            activeTodos: state.activeTodos.concat(payload)
-        });
-    });
-
-    reduceHelper.on(ResolveTodo, (state, payload) => {
-        return Object.assign({}, state, {
-            activeTodos: state.activeTodos.filter((todo) => todo !== payload),
-            resolvedTodos: state.resolvedTodos.concat(payload)
-        });
-    });
-
-    reduceHelper.on(UnResolveTodo, (state, payload) => {
-        return Object.assign({}, state, {
-            activeTodos: state.activeTodos.concat(payload),
-            resolvedTodos: state.resolvedTodos.filter((todo) => todo !== payload)
-        });
-    });
 });
 
 

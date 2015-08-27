@@ -59,16 +59,17 @@ export class Context<Shape> {
     }
 }
 
-export function createContext<Shape>(
-    initialState: () => Shape,
-    init?: (actionReducer: ActionReducer<Shape>) => void,
+
+export function createContext<Shape>({getInitialState, setupReducers, middlewares}: {
+    getInitialState(): Shape,
+    setupReducers?(actionReducer: ActionReducer<Shape>): any,
     middlewares?: any[]
-): () => Context<Shape> {
+}): () => Context<Shape> {
     return () => {
         const reducer = new ActionReducer<Shape>();
-        reducer.on(InitAction, initialState);
-        if (init) {
-            init(reducer);
+        reducer.on(InitAction, getInitialState);
+        if (setupReducers) {
+            setupReducers(reducer);
         }
         return new Context<Shape>(reducer, middlewares);
     };

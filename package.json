@@ -39,7 +39,7 @@
     "gulp-jasmine": "^2.0.1",
     "gulp-typescript": "^2.8.1",
     "jasmine": "^2.3.2",
-    "typescript": "1.6.0-dev.20150806",
+    "typescript": "^1.7.0-dev.20150827",
     "webpack": "^1.11.0"
   },
   "peerDependencies": {
