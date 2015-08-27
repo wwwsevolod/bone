@@ -1,6 +1,5 @@
 import {ActionCreator} from '../../../src/ActionCreator';
-import {Context} from '../../../src/Context';
-import {createReducer} from '../../../src/createReducer';
+import {createContext} from '../../../src/createContext';
 import {IAction} from '../../../src/Interfaces';
 import {Root} from '../../../src/Root';
 import {Connect, InjectAction} from '../../../src/decorators';
@@ -38,54 +37,41 @@ class UnResolveTodo extends ActionCreator {
     }
 }
 
-const ActiveTodoList = createReducer(() => [] as Todo[]);
-
-ActiveTodoList.on(AddTodo, (state, payload) => {
-    return state.concat(payload);
-});
-
-
-ActiveTodoList.on(ResolveTodo, (state, payload) => {
-    const newState = state.slice();
-    newState.splice(state.findIndex((value) => value === payload), 1);
-    return newState;
-});
-
-ActiveTodoList.on(UnResolveTodo, (state, payload) => {
-    return state.concat(payload);
-});
-
-const ResolvedTodoList = createReducer(() => [] as Todo[]);
-
-ResolvedTodoList.on(ResolveTodo, (state, payload) => {
-    return state.concat(payload);
-});
-
-
-ResolvedTodoList.on(UnResolveTodo, (state, payload) => {
-    const newState = state.slice();
-    newState.splice(state.findIndex((value) => value === payload), 1);
-    return newState;
-});
 
 // Create Data Context
+const TodoContext = createContext(() => {
+    return {
+        activeTodos: [] as Todo[],
+        resolvedTodos: [] as Todo[]
+    }
+}, (reduceHelper) => {
+    reduceHelper.on(AddTodo, (state, payload) => {
+        return Object.assign({}, state, {
+            activeTodos: state.activeTodos.concat(payload)
+        });
+    });
 
-// May be in next TypeScript version you will not need to define interface of data context explitly
-// But for now it is main overhead on Types
+    reduceHelper.on(ResolveTodo, (state, payload) => {
+        return Object.assign({}, state, {
+            activeTodos: state.activeTodos.filter((todo) => todo !== payload),
+            resolvedTodos: state.resolvedTodos.concat(payload)
+        });
+    });
+
+    reduceHelper.on(UnResolveTodo, (state, payload) => {
+        return Object.assign({}, state, {
+            activeTodos: state.activeTodos.concat(payload),
+            resolvedTodos: state.resolvedTodos.filter((todo) => todo !== payload)
+        });
+    });
+});
+
+
+
+// Create component, define contextState field and write types on it
 interface ITodoListState {
     activeTodos: Todo[]
     resolvedTodos: Todo[]
-}
-
-class TodoContext extends Context<ITodoListState> {
-    init() {
-        this.setReducer((state, action) => {
-            return {
-                activeTodos: ActiveTodoList(state.activeTodos, action),
-                resolvedTodos: ResolvedTodoList(state.resolvedTodos, action)
-            };
-        });
-    }
 }
 
 @Connect(TodoContext)
@@ -124,7 +110,7 @@ class TodoApp extends React.Component<any, any> {
             <div className="TodoApp__AddTodo">
                 <form onSubmit={(e) => this.handleTodo(e)}>
                     <input type="text" value={this.state.newTodo} onChange={
-                        (event) => this.setState({
+                        (event: React.FormEvent) => this.setState({
                             //bcz fuck you typescript, thats why =\\ wrong event target definition in lib.d.ts
                             newTodo: (event.nativeEvent.target as any).value as string
                         })
@@ -150,7 +136,7 @@ class TodoApp extends React.Component<any, any> {
 }
 
 
-const context = new TodoContext();
+const context = TodoContext();
 
 React.render(<Root context={context}>
     {() => <TodoApp />}

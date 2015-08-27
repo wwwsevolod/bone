@@ -1,6 +1,5 @@
 import {ActionCreator} from '../../src/ActionCreator';
-import {Context} from '../../src/Context';
-import {createReducer} from '../../src/createReducer';
+import {createContext} from '../../src/createContext';
 import {IAction} from '../../src/Interfaces';
 
 
@@ -17,7 +16,8 @@ class ResolveTodo extends ActionCreator {
     }
 }
 
-// Create Reducer
+
+
 let counter = 0;
 
 class Todo {
@@ -31,36 +31,28 @@ class Todo {
     }
 }
 
-const TodoList = createReducer(() => <Todo[]> []);
 
-TodoList.on(AddTodo, (state, payload) => {
-    return state.concat(new Todo(payload));
-});
-
-
-TodoList.on(ResolveTodo, (state, payload) => {
-    return state.slice().splice(state.findIndex((value) => value.id === payload), 1);
-});
 
 // Create Data Context
-
-// May be in next TypeScript version you will not need to define interface of data context explitly
-// But for now it is main overhead on Types
-interface ITodoListState {
-    todos: Todo[]
-}
-
-class TestContext extends Context<ITodoListState> {
-    init() {
-        this.setReducer((state, action) => {
-            return {
-                todos: TodoList(state.todos, action)
-            };
-        });
+const TestContext = createContext(() => {
+    return {
+        todos: <Todo[]>[]
     }
-}
+}, (reduceHelper) => {
+    reduceHelper.on(AddTodo, (state, payload) => {
+        return Object.assign({}, state, {
+            todos: state.todos.concat(new Todo(payload))
+        });
+    });
 
-const context = new TestContext();
+    reduceHelper.on(ResolveTodo, (state, payload) => {
+        return Object.assign({}, state, {
+            todos: state.todos.filter((todo) => todo.id !== payload)
+        });
+    });
+})
+
+const context = TestContext();
 
 // You will see {todos: []}
 console.log(context.getState());

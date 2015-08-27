@@ -16,8 +16,6 @@ In result you get autocomplete, type checking, method to separate layer to unit 
 
 There is no "Store" concept, but "Context" on its place. It is quite similiar, but could be more than one instance for different layers of application, to separate concerns.
 
-Also, you can use simple functions as reducers, with switch-case statement, but for types and autocmpletion use `createReducer` function.
-
 Currently, becauze typescript type system, you'll need to call reducers explicitely.
 
 ### Why typescript? Why not Flow?

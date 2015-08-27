@@ -1,16 +1,10 @@
 // <reference path="../node_modules/reflect-metadata/reflect-metadata.d.ts" />
 
-import {Context} from '../src/Context';
+import {Context} from '../src/createContext';
 import {AbstractActionCreator, AbstractActionCreatorClass} from '../src/AbstractActionCreator';
 import * as React from 'react';
 import 'reflect-metadata';
 
-
-// function Connect<Context extends Context<any>>(context: {new(): Context}, getter: (context: Context) => any) {
-//     return (target: ComponentClass<any>) => {
-
-//     }
-// }
 
 const actionsOnDispatcher = new Map<Context<any>, Map<AbstractActionCreatorClass, AbstractActionCreator>>();
 
@@ -63,7 +57,7 @@ export interface ComponentToInjectClass extends React.ComponentClass<any> {
     new(...any: any[]): ComponentToInject
 }
 
-export function Connect<ContextState>(contextClass: { new (...any: any[]): Context<ContextState> }, getter?: (state: ContextState) => any) {
+export function Connect<ContextState>(contextClass: { (...any: any[]): Context<ContextState> }, getter?: (state: ContextState) => any) {
     if (!getter) {
         getter = (state) => state;
     }
@@ -79,7 +73,7 @@ export function Connect<ContextState>(contextClass: { new (...any: any[]): Conte
             throw new Error('there is contextState declartion in contextTypes already');
         }
 
-        contextTypes.context = React.PropTypes.instanceOf(contextClass).isRequired;
+        contextTypes.context = React.PropTypes.instanceOf(Context).isRequired;
         contextTypes.contextState = React.PropTypes.any.isRequired;
         contextTypes.dispatchOnContext = React.PropTypes.func.isRequired;
 

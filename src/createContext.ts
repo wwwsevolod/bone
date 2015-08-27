@@ -1,43 +1,43 @@
 import {IAction} from './Interfaces';
 import {InitAction} from './ActionCreator';
+import {ActionReducer} from './ActionReducer';
 
 export type TListener = () => void;
 
-export abstract class Context<ReducerState> {
-    protected state = <ReducerState> {};
+export class Context<Shape> {
+    private state: Shape;
+
     private listeners: TListener[] = [];
 
     private emitChange() {
         this.listeners.forEach(listener => listener());
     }
 
-    constructor() {
+    private reducer: ActionReducer<Shape>;
+
+    constructor(reducer: ActionReducer<Shape>, middlewares?: any[]) {
+        this.reducer = reducer;
         this.init();
     }
 
-    protected init() {}
-
-    private reducer: (state: ReducerState, action: IAction<any>) => ReducerState;
-
-    protected setReducer(reducer: (state: ReducerState, action: IAction<any>) => ReducerState) {
-        this.reducer = reducer;
+    private init() {
         new InitAction(this.getDispatchFunction()).dispatch();
     }
 
     private dispatch(action: IAction<any>) {
-        this.state = this.reducer(this.state, action);
+        this.state = this.reducer.reduceAction(action, this.state);
         this.emitChange();
     }
 
     register(callback: TListener) {
-        this.listeners.push(callback)
+        this.listeners.push(callback);
     }
 
     unregister(callback: TListener) {
         this.listeners.splice(this.listeners.findIndex((value) => value === callback), 1);
     }
 
-    getState(): ReducerState {
+    getState(): Shape {
         return this.state;
     }
 
@@ -54,12 +54,22 @@ export abstract class Context<ReducerState> {
         return JSON.stringify(this);
     }
 
-    hydrate(state: ReducerState) {
-        this.state = state;
-        this.emitChange();
-    }
-
     toJSON() {
         return this.getState();
     }
+}
+
+export function createContext<Shape>(
+    initialState: () => Shape,
+    init?: (actionReducer: ActionReducer<Shape>) => void,
+    middlewares?: any[]
+): () => Context<Shape> {
+    return () => {
+        const reducer = new ActionReducer<Shape>();
+        reducer.on(InitAction, initialState);
+        if (init) {
+            init(reducer);
+        }
+        return new Context<Shape>(reducer, middlewares);
+    };
 }

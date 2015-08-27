@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Context} from './Context';
+import {Context} from './createContext';
 import {IAction} from './Interfaces';
 
 export interface RootProps {
